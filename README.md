@@ -96,9 +96,136 @@ Notice the group for this device is now hid and the group has read and write acc
 
 ======================================
 
-Optional: If you wish to use scripts that access GPIO, I2C and/or SPI via the RPi Web page, you will need to enable these interfaces in raspi-config. Secondly, you will need to grant user www-data access to these interfaces.
+**Optional:** If you wish to use scripts that access GPIO, I2C and/or SPI via the RPi Web page, you will need to enable these interfaces in raspi-config. Secondly, you will need to grant user www-data access to these interfaces.
 ```
 sudo usermod -a -G gpio,i2c,spi www-data
 ```
 
 ## Configure the Web Interface
+![After](https://github.com/sbkirby/RPi_remote_cnc_STOP/blob/master/images/main_screen_after_customization.jpg)
+
+Upload the index_new.txt and userbuttons.txt files found below to your RPi home directory '/home/pi/'.
+
+From your home directory, copy userbuttons.txt and index_new.txt to folder '/var/www/html/':
+```
+cd ~
+sudo cp userbuttons.txt /var/www/html/userbuttons
+sudo cp -b index_new.txt /var/www/html/index.php
+```
+Change ownership and permissions for userbuttons and index.php:
+```
+sudo chown www-data:www-data /var/www/html/userbuttons
+sudo chown www-data:www-data /var/www/html/index.php
+```
+Create the stop_cnc.sh shell script:
+```
+sudo nano /var/www/html/macros/stop_cnc.sh
+```
+Copy and paste the following text to this file:
+```
+#!/bin/bash
+function write_report {
+     echo -ne $1 > /dev/hidg0
+}
+# CTRL=x10 SHIFT=x20 ALT=x40
+# ALT + s
+write_report "\x40\0\x16\0\0\0\0\0"
+# Null
+write_report "\0\0\0\0\0\0\0\0"
+
+#echo "STOP CNC" >> /var/www/html/macros/testmacro.txt
+```
+After saving /var/www/html/macros/stop_cnc.sh, provide the necessary permissions to the file with these commands:
+```
+sudo chown www-data:www-data /var/www/html/macros/stop_cnc.sh
+sudo chmod 764 /var/www/html/macros/stop_cnc.sh
+```
+======================================
+Optional: If you wish to have buttons for CYCLE START and FEED HOLD, you can add the following buttons to /var/www/html/userbuttons:
+```
+sudo nano /var/www/html/userbuttons
+```
+Find and remove the # from the lines shown below in the userbuttons file:
+```
+#FEED HOLD,feed_hold.sh,btn btn-warning btn-lg,style="width:50%"
+#CYCLE START,cycle_start.sh,btn btn-success btn-lg,style="width:50%"
+```
+Create the cycle_start.sh shell script:
+```
+sudo nano /var/www/html/macros/cycle_start.sh
+```
+Copy and paste the following text to this file:
+```
+#!/bin/bash
+function write_report {
+	echo -ne $1 > /dev/hidg0
+}
+# CTRL=x10 SHIFT=x20 ALT=x40
+# ALT + r - CYCLE START
+write_report "\x40\0\x15\0\0\0\0\0"
+# Null
+write_report "\0\0\0\0\0\0\0\0"
+
+#echo "CYCLE START" >> /var/www/html/macros/cycle_start.txt
+```
+Create the feed_hold.sh shell script:
+```
+sudo nano /var/www/html/macros/feed_hold.sh
+```
+Copy and paste the following text to this file:
+```
+#!/bin/bash
+function write_report {
+	echo -ne $1 > /dev/hidg0
+}
+# CTRL=x10 SHIFT=x20 ALT=x40
+# SPACE - FEED HOLD
+write_report "\0\0\x2c\0\0\0\0\0"
+# Null
+write_report "\0\0\0\0\0\0\0\0"
+
+#echo "FEED HOLD" >> /var/www/html/macros/feed_hold.txt
+```
+Change ownership and permissions of shell scripts:
+```
+sudo chown www-data:www-data /var/www/html/macros/cycle_start.sh
+sudo chown www-data:www-data /var/www/html/macros/feed_hold.sh
+sudo chmod 764 /var/www/html/macros/cycle_start.sh
+sudo chmod 764 /var/www/html/macros/feed_hold.sh
+```
+
+## Customize the Web Appearance
+
+Prior to the previous step, the Web page appeared as the 'Before' image shown above. After the modifications in the STOP button will appear. Some of the recommended changes in the Camera Settings:
+
+* Resolutions: Max View 972p 4:3
+* Annotation (max 127 characters): Text: CNC Cam %Y.%M.%D_%h:%m:%s
+
+* Preview quality (1...100) Default 10: 50
+* Width (128...1024) Default 512: 1024
+* Divider (1-16) Default 1: 1
+
+The title bar name and name 'RPi Cam Control v6.4.34: mycam@raspberrypi' may be modified by customizing the /var/www/html/config.php file.
+```
+sudo nano /var/www/html/config.php
+```
+Modify 'RPi Cam Control' if you wish to change the Title name:
+```
+// name of this application
+define('APP_NAME', 'RPi Cam Control');
+```
+In the 'System' settings section you can change the Style to Night and click OK to turn the background black.
+
+## Testing and Using
+
+Connect a USB cable to the USB port of the RPi (not the PWR USB), and connect the other end to the PC running Mach3. This cable will power the RPi as well as control Mach3 on the PC. Therefore, DO NOT connect an external power supply to PWR USB on the RPi. This might cause damage to the PC or RPi.
+
+> **focus** - The window that currently has keyboard focus. Any keystrokes from the keyboard will occur in this window.
+
+As mentioned previously, the RPi's USB sends an ALT+s hotkey to the USB of the attached PC. In order to test the setup (without Mach3), open an application (preferably a text editor) that has a Menu option that begins with S, as seen above in the Notepad++ application. Notice that the S is underlined in the Menu indicating that an ALT+s keystroke will activate the menu. You can try it with the PCs keyboard to test the results. As in the example above, the Search menu appeared. Your results will be different, depending on the application you open with a Menu containing an option with S. If your test was successful, test your setup with the Web application. Set the focus on the same application as before, and access the Web application of the RPi from a different device. You can even use a smart phone to access the RPi. Click the STOP button on the Web page, and the same Menu should drop down as before.
+
+If your test are successful, you're ready to use this with Mach3. I use Mach3 2010 Screenset, and it works fine.
+
+Make sure that Mach3 is in focus for the PCs keyboard input. Touching the title bar of Mach3 is sufficient enough to insure this is the case. Mach3 should be the only application running on the Desktop of the PC.
+
+Using this method should be done at your own risk.
