@@ -140,8 +140,10 @@ After saving /var/www/html/macros/stop_cnc.sh, provide the necessary permissions
 sudo chown www-data:www-data /var/www/html/macros/stop_cnc.sh
 sudo chmod 764 /var/www/html/macros/stop_cnc.sh
 ```
+
 ======================================
-Optional: If you wish to have buttons for CYCLE START and FEED HOLD, you can add the following buttons to /var/www/html/userbuttons:
+
+**Optional:** If you wish to have buttons for CYCLE START and FEED HOLD, you can add the following buttons to /var/www/html/userbuttons:
 ```
 sudo nano /var/www/html/userbuttons
 ```
