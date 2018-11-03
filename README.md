@@ -200,12 +200,12 @@ sudo chmod 764 /var/www/html/macros/feed_hold.sh
 
 Prior to the previous step, the Web page appeared as the 'Before' image shown above. After the modifications in the STOP button will appear. Some of the recommended changes in the Camera Settings:
 
-* Resolutions: Max View 972p 4:3
-* Annotation (max 127 characters): Text: CNC Cam %Y.%M.%D_%h:%m:%s
+* Resolutions: Max View 972p **4:3**
+* Annotation (max 127 characters): Text: **CNC Cam %Y.%M.%D_%h:%m:%s**
 
-* Preview quality (1...100) Default 10: 50
-* Width (128...1024) Default 512: 1024
-* Divider (1-16) Default 1: 1
+* Preview quality (1...100) Default 10: **50**
+* Width (128...1024) Default 512: **1024**
+* Divider (1-16) Default 1: **1**
 
 The title bar name and name 'RPi Cam Control v6.4.34: mycam@raspberrypi' may be modified by customizing the /var/www/html/config.php file.
 ```
