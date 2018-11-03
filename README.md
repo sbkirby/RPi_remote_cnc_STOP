@@ -1,6 +1,5 @@
 # Remote CNC Stop and Monitor with RPi
 ![Main Photo 1](https://github.com/sbkirby/RPi_remote_cnc_STOP/blob/master/images/main_photo_1.jpg)
-![Main Photo 2](https://github.com/sbkirby/RPi_remote_cnc_STOP/blob/master/images/main_photo_2.jpg)
 
 This project provides an inexpensive means of remotely performing a STOP (ALT+S) to Mach3. This is accomplished with a Raspberry Pi (RPi) + Camera connected to a PC via a USB cable. Monitoring and activating the STOP on the CNC is done with a video streaming web application running on the RPi. Using this solution should be done at your own risk. I highly recommend contacting the manufacturer of your CNC, and purchase and install the recommended remote emergency stop specified.
 
@@ -56,14 +55,14 @@ Install streaming video and web server software per instructions at [RPi-Cam-Web
 
 During the installation you will be asked the following Configuration Options:
 
-* Cam subfolder: html
-* Autostart: (yes/no) yes
-* Server: (apache/nginx/lighttpd) apache
-* Webport: 80
-* User: (blank=nologin) admin (example)
-* Password: #34By97Zz (example)
-* jpglink: (yes/no) no
-* phpversion: (5/7) 7
+* Cam subfolder: **html**
+* Autostart: (yes/no) **yes**
+* Server: (apache/nginx/lighttpd) **apache**
+* Webport: **80**
+* User: (blank=nologin) **admin** (example)
+* Password: **#34By97Zz** (example)
+* jpglink: (yes/no) **no**
+* phpversion: (5/7) **7**
 
 I chose the default inputs to simplify the installation, but added a User and Password to secure the RPi Web Page. Select and continue with the installation. At the end you be asked to Start Camera System Now select and continue. If successful, you will be taken to the command prompt.
 
