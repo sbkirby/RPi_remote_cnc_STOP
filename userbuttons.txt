@@ -1,0 +1,8 @@
+#User buttons definitions
+#maximum of six buttons
+#Make sure no spaces between buttonname and macroname
+#button name,macro,button styles,other attributes
+#Button Name 1,button1.sh,btn btn-primary, 
+STOP,stop_cnc.sh,btn btn-danger btn-lg,style="width:50%" autofocus
+#FEED HOLD,feed_hold.sh,btn btn-warning btn-lg,style="width:50%"
+#CYCLE START,cycle_start.sh,btn btn-success btn-lg,style="width:50%"
